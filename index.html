@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KJ Bible</title>
+<style>
+:root{--bg:#f5f2eb;--surface:#fff;--text:#2c241b;--accent:#8b6914;--accent-light:#f0e6d3;--border:#e0d5c5}
+[data-theme="dark"]{--bg:#1a1714;--surface:#252019;--text:#e8e0d5;--accent:#c9a84c;--accent-light:#3d3326;--border:#3d3529}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Georgia,serif;background:var(--bg);color:var(--text);line-height:1.7}
+.header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem;position:sticky;top:0;z-index:100}
+.header-content{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.3rem;font-weight:700;color:var(--accent)}
+.controls{display:flex;gap:.5rem}
+select,.btn{background:var(--accent-light);border:1px solid var(--border);color:var(--text);padding:.5rem;border-radius:8px;font-family:inherit;font-size:.9rem;cursor:pointer}
+.container{max-width:900px;margin:0 auto;padding:1rem}
+.search{width:100%;padding:.75rem;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-family:inherit;font-size:1rem;margin-bottom:1rem}
+.books{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.5rem;margin-bottom:1rem}
+.book{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:.6rem;border-radius:8px;cursor:pointer;font-family:inherit;font-size:.85rem;text-align:left}
+.book:hover,.book.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.label{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--accent);font-weight:700;margin:1rem 0 .5rem}
+.main{background:var(--surface);border-radius:12px;padding:1.5rem}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:.5rem}
+.title{font-size:1.5rem;font-weight:700}
+.nav-btns{display:flex;gap:.5rem}
+.nav-btn{background:var(--accent-light);border:1px solid var(--border);color:var(--text);padding:.5rem 1rem;border-radius:6px;cursor:pointer;font-family:inherit}
+.nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.verses{font-size:1.15rem;line-height:1.9}
+.v{margin-bottom:.75rem;padding-left:2.2rem;position:relative}
+.vn{position:absolute;left:0;top:.15em;font-size:.7rem;color:var(--accent);font-weight:700;font-family:sans-serif}
+.load{text-align:center;padding:2rem;color:#6b5d4d;font-style:italic}
+.err{background:#fee;color:#c33;padding:1rem;border-radius:8px}
+.sr{margin-top:1rem}
+.si{padding:1rem;border-bottom:1px solid var(--border);cursor:pointer}
+.si:hover{background:var(--accent-light)}
+.sref{font-weight:700;color:var(--accent)}
+.st{color:#6b5d4d;font-size:.95rem}
+.sm{color:#6b5d4d;font-size:.85rem;margin-bottom:1rem;font-style:italic}
+@media(max-width:600px){.books{grid-template-columns:repeat(2,1fr)}.main{padding:1rem}.verses{font-size:1.05rem}}
+</style>
+</head>
+<body>
+<header class="header"><div class="header-content"><div class="logo">📖 KJ Bible</div><div class="controls"><select id="t"><option value="kjv">KJV</option><option value="asv">ASV</option></select><button class="btn" onclick="d()">🌙</button></div></div></header>
+<div class="container">
+<input class="search" id="s" placeholder="Search (press Enter)..." onkeypress="h(event)">
+<div class="label">Old Testament</div><div class="books" id="o"></div>
+<div class="label">New Testament</div><div class="books" id="n"></div>
+<div class="main" id="m"><div class="nav"><h1 class="title" id="c">Genesis 1</h1><div class="nav-btns"><button class="nav-btn" id="p" onclick="pr()">←</button><button class="nav-btn" id="x" onclick="nx()">→</button></div></div><div id="v" class="verses"><div class="load">Loading...</div></div></div>
+</div>
+<script>
+const B=[{n:"Genesis",c:50,t:"O"},{n:"Exodus",c:40,t:"O"},{n:"Leviticus",c:27,t:"O"},{n:"Numbers",c:36,t:"O"},{n:"Deuteronomy",c:34,t:"O"},{n:"Joshua",c:24,t:"O"},{n:"Judges",c:21,t:"O"},{n:"Ruth",c:4,t:"O"},{n:"1 Samuel",c:31,t:"O"},{n:"2 Samuel",c:24,t:"O"},{n:"1 Kings",c:22,t:"O"},{n:"2 Kings",c:25,t:"O"},{n:"1 Chronicles",c:29,t:"O"},{n:"2 Chronicles",c:36,t:"O"},{n:"Ezra",c:10,t:"O"},{n:"Nehemiah",c:13,t:"O"},{n:"Esther",c:10,t:"O"},{n:"Job",c:42,t:"O"},{n:"Psalm",c:150,t:"O"},{n:"Proverbs",c:31,t:"O"},{n:"Ecclesiastes",c:12,t:"O"},{n:"Song of Solomon",c:8,t:"O"},{n:"Isaiah",c:66,t:"O"},{n:"Jeremiah",c:52,t:"O"},{n:"Lamentations",c:5,t:"O"},{n:"Ezekiel",c:48,t:"O"},{n:"Daniel",c:12,t:"O"},{n:"Hosea",c:14,t:"O"},{n:"Joel",c:3,t:"O"},{n:"Amos",c:9,t:"O"},{n:"Obadiah",c:1,t:"O"},{n:"Jonah",c:4,t:"O"},{n:"Micah",c:7,t:"O"},{n:"Nahum",c:3,t:"O"},{n:"Habakkuk",c:3,t:"O"},{n:"Zephaniah",c:3,t:"O"},{n:"Haggai",c:2,t:"O"},{n:"Zechariah",c:14,t:"O"},{n:"Malachi",c:4,t:"O"},{n:"Matthew",c:28,t:"N"},{n:"Mark",c:16,t:"N"},{n:"Luke",c:24,t:"N"},{n:"John",c:21,t:"N"},{n:"Acts",c:28,t:"N"},{n:"Romans",c:16,t:"N"},{n:"1 Corinthians",c:16,t:"N"},{n:"2 Corinthians",c:13,t:"N"},{n:"Galatians",c:6,t:"N"},{n:"Ephesians",c:6,t:"N"},{n:"Philippians",c:4,t:"N"},{n:"Colossians",c:4,t:"N"},{n:"1 Thessalonians",c:5,t:"N"},{n:"2 Thessalonians",c:3,t:"N"},{n:"1 Timothy",c:6,t:"N"},{n:"2 Timothy",c:4,t:"N"},{n:"Titus",c:3,t:"N"},{n:"Philemon",c:1,t:"N"},{n:"Hebrews",c:13,t:"N"},{n:"James",c:5,t:"N"},{n:"1 Peter",c:5,t:"N"},{n:"2 Peter",c:3,t:"N"},{n:"1 John",c:5,t:"N"},{n:"2 John",c:1,t:"N"},{n:"3 John",c:1,t:"N"},{n:"Jude",c:1,t:"N"},{n:"Revelation",c:22,t:"N"}];
+let b="Genesis",k=1,r="kjv";
+function i(){f();l(b,k);if(localStorage.getItem('th')==='d')document.documentElement.setAttribute('data-theme','dark');let z=localStorage.getItem('lr');if(z){try{let j=JSON.parse(z);b=j.b||"Genesis";k=j.c||1;if(j.r){r=j.r;document.getElementById('t').value=r}l(b,k)}catch(e){}}}
+function f(){let o=document.getElementById('o'),n=document.getElementById('n');o.innerHTML='';n.innerHTML='';B.forEach(x=>{let e=document.createElement('button');e.className='book';e.textContent=x.n;e.onclick=()=>q(x.n);(x.t==='O'?o:n).appendChild(e)})}
+function q(n){b=n;k=1;document.querySelectorAll('.book').forEach(e=>e.classList.toggle('active',e.textContent===n));l(b,k);document.getElementById('m').scrollIntoView({behavior:'smooth'})}
+async function l(b,k){let v=document.getElementById('v'),c=document.getElementById('c');v.innerHTML='<div class="load">Loading...</div>';c.textContent=b+' '+k;let x=B.find(x=>x.n===b);document.getElementById('p').disabled=k===1&&b==="Genesis";document.getElementById('x').disabled=k===x.c&&b==="Revelation";try{let u='https://dailybible.ca/api/'+encodeURIComponent(b+' '+k)+'?translation='+r;let R=await fetch(u);if(!R.ok)throw new Error('x');let d=await R.json();if(d.error)throw new Error(d.error);let h='';d.verses.forEach(x=>h+='<div class="v"><span class="vn">'+x.verse+'</span>'+x.text+'</div>');v.innerHTML=h;localStorage.setItem('lr',JSON.stringify({b,k,r}))}catch(e){v.innerHTML='<div class="err">Error: '+e.message+'</div>'}}
+function pr(){if(k>1)k--;else{let i=B.findIndex(x=>x.n===b);if(i>0){b=B[i-1].n;k=B[i-1].c}}l(b,k)}
+function nx(){let x=B.find(x=>x.n===b);if(k<x.c)k++;else{let i=B.findIndex(x=>x.n===b);if(i<B.length-1){b=B[i+1].n;k=1}}l(b,k)}
+async function h(e){if(e.key!=='Enter')return;let qy=document.getElementById('s').value.trim();if(!qy||qy.length<2)return;let v=document.getElementById('v'),c=document.getElementById('c');v.innerHTML='<div class="load">Searching...</div>';c.textContent='Search: "'+qy+'"';document.getElementById('p').disabled=true;document.getElementById('x').disabled=true;try{let u='https://dailybible.ca/api/search?q='+encodeURIComponent(qy)+'&translation='+r+'&limit=50';let R=await fetch(u);let d=await R.json();if(d.error||!d.results||!d.results.length){v.innerHTML='<div class="sm">No results.</div>';return}let h='<div class="sm">'+d.count+' found</div><div class="sr">';d.results.forEach(x=>h+='<div class="si" onclick="j(\\''+x.book_name+'\\','+x.chapter+','+x.verse+')"><div class="sref">'+x.reference+'</div><div class="st">'+x.text+'</div></div>');h+='</div>';v.innerHTML=h}catch(e){v.innerHTML='<div class="err">Search failed.</div>'}}
+function j(bk,c,vs){b=bk;k=c;document.getElementById('s').value='';l(b,k);document.querySelectorAll('.book').forEach(e=>e.classList.toggle('active',e.textContent===b));setTimeout(()=>{document.querySelectorAll('.vn').forEach(v=>{if(v.textContent===String(vs)){v.parentElement.scrollIntoView({behavior:'smooth',block:'center'});v.parentElement.style.background='var(--accent-light)';setTimeout(()=>v.parentElement.style.background='',2000)}})},500)}
+function d(){let h=document.documentElement;if(h.getAttribute('data-theme')==='dark'){h.removeAttribute('data-theme');localStorage.setItem('th','l')}else{h.setAttribute('data-theme','dark');localStorage.setItem('th','d')}}
+document.getElementById('t').addEventListener('change',e=>{r=e.target.value;l(b,k)});
+i();
+</script>
+</body>
+</html>
