@@ -37,26 +37,41 @@ body{font-family:Georgia,serif;background:var(--bg);color:var(--text);line-heigh
 .hero h1 { font-size: 3.5rem; color: var(--gold); margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 .hero p { font-size: 1.4rem; max-width: 800px; margin: 0 auto; font-style: italic; opacity: 0.9; }
 
-/* Host Bio */
-.host-section {
+/* Section Styling */
+.content-section {
   padding: 4rem 1rem;
-  background: var(--surface);
-  text-align: center;
   border-bottom: 1px solid var(--border);
 }
+
+/* Host Bio */
 .host-card {
   max-width: 700px;
   margin: 0 auto;
   border: 3px solid var(--gold);
   padding: 3rem;
   border-radius: 20px;
-  background: var(--bg);
+  background: var(--surface);
 }
 .host-card h2 { color: var(--royal-purple); font-size: 2rem; margin-bottom: 1rem; }
 .host-tagline { font-weight: 700; color: var(--accent); margin-bottom: 1.5rem; display: block; }
 .host-email { background: var(--royal-purple); color: #fff; padding: .8rem 1.5rem; border-radius: 50px; display: inline-block; text-decoration: none; margin-top: 1rem; font-weight: 700; }
 
-/* Existing App Styles */
+/* Research Section */
+.research-container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+.research-container h2 { color: var(--royal-purple); margin-bottom: 1.5rem; border-bottom: 2px solid var(--gold); display: inline-block; }
+.research-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; text-align: left; }
+.research-item h3 { color: var(--accent); margin-bottom: 0.5rem; }
+.research-item ul { list-style: none; }
+.research-item li { margin-bottom: 0.5rem; }
+
+/* Original App Styles */
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:1rem;position:sticky;top:0;z-index:100}
 .header-content{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:1.3rem;font-weight:700;color:var(--accent)}
@@ -77,9 +92,7 @@ select,.btn{background:var(--accent-light);border:1px solid var(--border);color:
 .verses{font-size:1.15rem;line-height:1.9}
 .v{margin-bottom:.75rem;padding-left:2.2rem;position:relative}
 .vn{position:absolute;left:0;top:.15em;font-size:.7rem;color:var(--accent);font-weight:700;font-family:sans-serif}
-.load{text-align:center;padding:2rem;color:#6b5d4d;font-style:italic}
-.err{background:#fee;color:#c33;padding:1rem;border-radius:8px}
-@media(max-width:600px){.hero h1{font-size: 2.2rem;} .books{grid-template-columns:repeat(2,1fr)}.main{padding:1rem}.verses{font-size:1.05rem}}
+@media(max-width:768px){ .hero h1{font-size: 2.5rem;} .research-grid{grid-template-columns: 1fr;} .books{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -89,12 +102,40 @@ select,.btn{background:var(--accent-light);border:1px solid var(--border);color:
   <p>Esther: A Study in Queenship and Humility</p>
 </section>
 
-<section class="host-section">
+<section class="content-section" style="text-align:center;">
   <div class="host-card">
     <h2>Queen Lisa Beasley</h2>
     <span class="host-tagline">A Modern Day Kathryn Kuhlman</span>
     <p>Dedicated to exploring the power and presence of the Holy Spirit through scripture and research.</p>
     <a href="mailto:mantle@gmail.com" class="host-email">Inquiries: mantle@gmail.com</a>
+  </div>
+</section>
+
+<section class="content-section" style="text-align:center; background: var(--bg);">
+  <div class="research-container">
+    <h2>Kathryn Kuhlman Research</h2>
+    <p>Centered on the power and presence of the Holy Spirit. Her ministry emphasized experiential understanding and divine healing.</p>
+    
+    <div class="research-grid">
+      <div class="research-item">
+        <h3>Primary Resources</h3>
+        <ul>
+          <li>📖 "God Can Do It Again"</li>
+          <li>📖 "He Touched Me"</li>
+          <li>📖 "Nothing is Impossible With God"</li>
+          <li>📖 "Daughter of the King" (Autobiography)</li>
+        </ul>
+      </div>
+      <div class="research-item">
+        <h3>Key Themes</h3>
+        <ul>
+          <li>🕊️ Presence of the Holy Spirit</li>
+          <li>✨ Divine Healing & Restoration</li>
+          <li>🙌 The Power of Yielding</li>
+          <li>🔥 The Empowered Life</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
